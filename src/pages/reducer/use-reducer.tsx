@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-
-import { Button, Table } from "antd";
+import React from "react";
 import axios from "axios";
+import { Button, Table } from "antd";
+
 import User from "./mappers";
-import { Modal } from "../../components";
 import ModalElm from "../../components/modal";
 
 export interface IUser {
@@ -29,7 +28,7 @@ interface IAction {
   payload?: any;
 }
 
-interface IInfo {
+interface IINFO {
   id: string;
 }
 
@@ -37,23 +36,23 @@ const reducer = (state: IObj, action: IAction) => {
   console.log("action: ", action);
   console.log("state: ", state);
   switch (action.type) {
-    case "update":
+    case "UPDATE":
       return { ...state, ...action.payload };
-    case "info":
+    case "INFO":
       return {
         ...state,
         isEdit: false,
         selectedUser: state.users[action.payload.id - 1],
         isOpen: !state.isOpen,
       };
-    case "edit":
+    case "EDIT":
       return {
         ...state,
         isEdit: !state.isEdit,
         selectedUser: state.users[action.payload.id - 1],
         isOpen: !state.isOpen,
       };
-    case "delete":
+    case "DELETE":
       return {
         ...state,
         isEdit: false,
@@ -85,24 +84,24 @@ const Reducer = () => {
       const _users = await data;
       const users = _users.map((user: any) => User(user));
 
-      dispatch({ type: "update", payload: { users } });
+      dispatch({ type: "UPDATE", payload: { users } });
     }
     getUsers();
   }, []);
 
-  const infoFn = ({ id }: IInfo) => {
+  const INFOFn = ({ id }: IINFO) => {
     console.log("isEdit: ", state.isEdit);
-    const action: IAction = { type: "info", payload: { id } };
+    const action: IAction = { type: "INFO", payload: { id } };
     dispatch(action);
   };
 
-  const editFn = ({ id }: IInfo) => {
-    const action: IAction = { type: "edit", payload: { id } };
+  const editFn = ({ id }: IINFO) => {
+    const action: IAction = { type: "EDIT", payload: { id } };
     dispatch(action);
   };
 
-  const deleteFn = ({ id }: IInfo) => {
-    const action: IAction = { type: "delete", payload: { id } };
+  const deleteFn = ({ id }: IINFO) => {
+    const action: IAction = { type: "DELETE", payload: { id } };
     dispatch(action);
   };
 
@@ -150,9 +149,9 @@ const Reducer = () => {
             <Button
               type="primary"
               className="bg-blue-500 text-white"
-              onClick={() => infoFn(user)}
+              onClick={() => INFOFn(user)}
             >
-              Info
+              INFO
             </Button>
             <Button
               type="text"
@@ -189,9 +188,9 @@ const Reducer = () => {
         {...state.selectedUser!}
         isEdit={state.isEdit}
         open={state.isOpen}
-        onOk={() => dispatch({ type: "update", payload: { isOpen: false } })}
+        onOk={() => dispatch({ type: "UPDATE", payload: { isOpen: false } })}
         onCancel={() =>
-          dispatch({ type: "update", payload: { isOpen: false } })
+          dispatch({ type: "UPDATE", payload: { isOpen: false } })
         }
       />
     </div>
